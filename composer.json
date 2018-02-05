@@ -1,12 +1,12 @@
 {
-    "name": "barryvdh/laravel-translation-manager",
+    "name": "addgod/laravel-translation-manager",
     "description": "Manage Laravel Translations",
     "keywords": ["laravel", "translations", "translator"],
     "license": "MIT",
     "authors": [
         {
-            "name": "Barry vd. Heuvel",
-            "email": "barryvdh@gmail.com"
+            "name": "Jesper Kold-Hansen",
+            "email": "jkoldhansen@gmail.com"
         }
     ],
     "require": {
@@ -17,16 +17,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Barryvdh\\TranslationManager\\": "src/"
+            "Addgod\\TranslationManager\\": "src/"
         }
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "0.4-dev"
-        },
         "laravel": {
             "providers": [
-                "Barryvdh\\TranslationManager\\ManagerServiceProvider"
+                "Addgod\\TranslationManager\\ManagerServiceProvider"
             ]
         }
     },

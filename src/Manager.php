@@ -2,6 +2,7 @@
 
 namespace Addgod\TranslationManager;
 
+use function GuzzleHttp\Psr7\str;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Events\Dispatcher;
 use Addgod\TranslationManager\Models\Translation;
@@ -46,6 +47,7 @@ class Manager{
                 'locale' => $this->app['config']['app.locale'],
                 'group' => $group,
                 'key' => $key,
+                'namespace' => $namespace,
             ));
         }
     }
@@ -64,7 +66,7 @@ class Manager{
                 if ($this->config['exclude_vendor']) {
                     continue;
                 }
-                $this->importTranslations($replace, $langPath);
+                $counter += $this->importVendorTranslations($langPath, $replace);
             } else {
                 foreach ($this->files->allfiles($langPath) as $file) {
                     $info = pathinfo($file);
@@ -108,16 +110,53 @@ class Manager{
         return $counter;
     }
 
-    public function importTranslation($key, $value, $locale, $group, $replace = false) {
+    public function importVendorTranslations($vendorpath, $replace = false)
+    {
+        $counter = 0;
+
+        foreach ($this->files->directories($vendorpath) as $namespacePath) {
+            $namespace = basename($namespacePath);
+            foreach ($this->files->directories($namespacePath) as $langPath) {
+                $locale = basename($langPath);
+                foreach ($this->files->allfiles($langPath) as $file) {
+                    $info = pathinfo($file);
+                    $group = $info['filename'];
+                    if (in_array($group, $this->config['exclude_groups'])) {
+                        continue;
+                    }
+                    $subLangPath = str_replace($langPath . DIRECTORY_SEPARATOR, "", $info['dirname']);
+                    $subLangPath = str_replace(DIRECTORY_SEPARATOR, "/", $subLangPath);
+                    $langPath = str_replace(DIRECTORY_SEPARATOR, "/", $langPath);
+
+                    if ($subLangPath != $langPath) {
+                        $group = $subLangPath . "/" . $group;
+                    }
+                    $translations = \Lang::getLoader()->load($locale, $group, $namespace);
+                    if ($translations && is_array($translations)) {
+                        foreach (array_dot($translations) as $key => $value) {
+                            $importedTranslation = $this->importTranslation($key, $value, $locale, $group, $replace, $namespace);
+                            $counter += $importedTranslation ? 1 : 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $counter;
+    }
+
+
+    public function importTranslation($key, $value, $locale, $group, $replace = false, $namespace = '*') {
         // process only string values
         if (is_array($value)) {
             return false;
         }
         $value = (string)$value;
         $translation = Translation::firstOrNew(array(
-            'locale' => $locale,
-            'group'  => $group,
-            'key'    => $key,
+            'locale'    => $locale,
+            'group'     => $group,
+            'key'       => $key,
+            'namespace' => $namespace,
         ));
 
         // Check if the database is different then the files
@@ -196,13 +235,13 @@ class Manager{
         foreach($groupKeys as $key) {
             // Split the group and item
             list($group, $item) = explode('.', $key, 2);
-            $this->missingKey('', $group, $item);
+            $this->missingKey('*', $group, $item);
         }
 
         foreach($stringKeys as $key){
             $group = self::JSON_GROUP;
             $item = $key;
-            $this->missingKey('', $group, $item);
+            $this->missingKey('*', $group, $item);
         }
 
 
@@ -280,7 +319,17 @@ class Manager{
         if (empty($this->locales)) {
             $locales = array_merge([config('app.locale')], Translation::groupBy('locale')->pluck('locale')->toArray());
             foreach ($this->files->directories($this->app->langPath()) as $localeDir) {
-                $locales[] = $this->files->name($localeDir);
+                $locale = basename($localeDir);
+                if (strtolower($locale) === 'vendor') {
+                    if ($this->config['exclude_vendor']) continue;
+                    foreach ($this->files->directories($localeDir) as $vendorDir) {
+                        foreach ($this->files->directories($vendorDir) as $namespaceDir) {
+                            $locales[] = $this->files->name($namespaceDir);
+                        }
+                    }
+                } else {
+                    $locales[] = $this->files->name($localeDir);
+                }
             }
             $this->locales = array_unique($locales);
             sort($this->locales);

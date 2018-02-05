@@ -1,5 +1,6 @@
 <?php namespace Addgod\TranslationManager;
 
+use Addgod\TranslationManager\Models\Translation;
 use Illuminate\Translation\Translator as LaravelTranslator;
 use Illuminate\Events\Dispatcher;
 
@@ -29,6 +30,34 @@ class Translator extends LaravelTranslator {
         }
 
         return $result;
+    }
+
+    /**
+     * Load the specified language group.
+     *
+     * @param  string  $namespace
+     * @param  string  $group
+     * @param  string  $locale
+     * @return void
+     */
+    public function load($namespace, $group, $locale)
+    {
+        if ($this->isLoaded($namespace, $group, $locale)) {
+            return;
+        }
+
+        // First try to load lines from the databse, if that failes, then use
+        // the standard loader.
+        $lines = Translation::whereNamespace($namespace)->whereGroup($group)->whereLocale($locale)->get(['key', 'value'])->pluck('value', 'key')->toArray();
+
+        // The loader is responsible for returning the array of language lines for the
+        // given namespace, group, and locale. We'll set the lines in this array of
+        // lines that have already been loaded so that we can easily access them.
+        if (empty($lines)) {
+            $lines = $this->loader->load($locale, $group, $namespace);
+        }
+
+        $this->loaded[$namespace][$group][$locale] = $lines;
     }
 
     public function setTranslationManager(Manager $manager)

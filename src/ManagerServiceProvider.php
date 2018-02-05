@@ -69,9 +69,7 @@ class ManagerServiceProvider extends ServiceProvider {
         ], 'views');
 
         $migrationPath = __DIR__.'/../database/migrations';
-        $this->publishes([
-            $migrationPath => base_path('database/migrations'),
-        ], 'migrations');
+        $this->loadMigrationsFrom($migrationPath);
 
         $config = $this->app['config']->get('translation-manager.route', []);
         $config['namespace'] = 'Addgod\TranslationManager';

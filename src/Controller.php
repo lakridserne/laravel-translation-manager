@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class Controller extends BaseController
 {
-    /** @var \Barryvdh\TranslationManager\Manager  */
+    /** @var \Addgod\TranslationManager\Manager  */
     protected $manager;
 
     public function __construct(Manager $manager)
@@ -46,7 +46,7 @@ class Controller extends BaseController
             ->with('group', $group)
             ->with('numTranslations', $numTranslations)
             ->with('numChanged', $numChanged)
-            ->with('editUrl', action('\Barryvdh\TranslationManager\Controller@postEdit', [$group]))
+            ->with('editUrl', action('\Addgod\TranslationManager\Controller@postEdit', [$group]))
             ->with('deleteEnabled', $this->manager->getConfig('delete_enabled'));
     }
 
@@ -143,12 +143,12 @@ class Controller extends BaseController
         $group = str_replace(".", '', $request->input('new-group'));
         if ($group)
         {
-            return redirect()->action('\Barryvdh\TranslationManager\Controller@getView',$group);
+            return redirect()->action('\Addgod\TranslationManager\Controller@getView',$group);
         }
         else
         {
             return redirect()->back();
-        }       
+        }
     }
 
     public function postAddLocale(Request $request)

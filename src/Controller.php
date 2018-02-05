@@ -1,8 +1,8 @@
-<?php namespace Barryvdh\TranslationManager;
+<?php namespace Addgod\TranslationManager;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Barryvdh\TranslationManager\Models\Translation;
+use Addgod\TranslationManager\Models\Translation;
 use Illuminate\Support\Collection;
 
 class Controller extends BaseController

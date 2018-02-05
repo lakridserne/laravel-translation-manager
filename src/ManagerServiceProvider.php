@@ -1,4 +1,4 @@
-<?php namespace Barryvdh\TranslationManager;
+<?php namespace Addgod\TranslationManager;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;

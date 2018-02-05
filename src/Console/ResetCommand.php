@@ -1,9 +1,9 @@
 <?php
 
-namespace Barryvdh\TranslationManager\Console;
+namespace Addgod\TranslationManager\Console;
 
 use Illuminate\Console\Command;
-use Barryvdh\TranslationManager\Manager;
+use Addgod\TranslationManager\Manager;
 
 class ResetCommand extends Command
 {
@@ -21,7 +21,7 @@ class ResetCommand extends Command
      */
     protected $description = 'Delete all translations from the database';
 
-    /** @var \Barryvdh\TranslationManager\Manager */
+    /** @var \Addgod\TranslationManager\Manager */
     protected $manager;
 
     public function __construct(Manager $manager)

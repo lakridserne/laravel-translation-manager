@@ -1,8 +1,10 @@
-<?php namespace Barryvdh\TranslationManager;
+<?php
+
+namespace Addgod\TranslationManager;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Events\Dispatcher;
-use Barryvdh\TranslationManager\Models\Translation;
+use Addgod\TranslationManager\Models\Translation;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Finder\Finder;
@@ -48,30 +50,41 @@ class Manager{
         }
     }
 
-    public function importTranslations($replace = false)
+    public function importTranslations($replace = false, $path = null)
     {
         $counter = 0;
 
-        foreach ($this->files->directories($this->app['path.lang']) as $langPath) {
+        if (is_null($path)) {
+            $path = $this->app['path.lang'];
+        }
+
+        foreach ($this->files->directories($path) as $langPath) {
             $locale = basename($langPath);
-            foreach ($this->files->allfiles($langPath) as $file) {
-                $info = pathinfo($file);
-                $group = $info['filename'];
-                if (in_array($group, $this->config['exclude_groups'])) {
+            if (strtolower($locale) === 'vendor') {
+                if ($this->config['exclude_vendor']) {
                     continue;
                 }
-                $subLangPath = str_replace($langPath . DIRECTORY_SEPARATOR, "", $info['dirname']);
-                $subLangPath = str_replace(DIRECTORY_SEPARATOR, "/", $subLangPath);
-                $langPath = str_replace(DIRECTORY_SEPARATOR, "/", $langPath);
+                $this->importTranslations($replace, $langPath);
+            } else {
+                foreach ($this->files->allfiles($langPath) as $file) {
+                    $info = pathinfo($file);
+                    $group = $info['filename'];
+                    if (in_array($group, $this->config['exclude_groups'])) {
+                        continue;
+                    }
+                    $subLangPath = str_replace($langPath . DIRECTORY_SEPARATOR, "", $info['dirname']);
+                    $subLangPath = str_replace(DIRECTORY_SEPARATOR, "/", $subLangPath);
+                    $langPath = str_replace(DIRECTORY_SEPARATOR, "/", $langPath);
 
-                if ($subLangPath != $langPath) {
-                    $group = $subLangPath . "/" . $group;
-                }
-                $translations = \Lang::getLoader()->load($locale, $group);
-                if ($translations && is_array($translations)) {
-                    foreach (array_dot($translations) as $key => $value) {
-                        $importedTranslation = $this->importTranslation($key, $value, $locale, $group, $replace);
-                        $counter += $importedTranslation ? 1 : 0;
+                    if ($subLangPath != $langPath) {
+                        $group = $subLangPath . "/" . $group;
+                    }
+                    $translations = \Lang::getLoader()->load($locale, $group);
+                    if ($translations && is_array($translations)) {
+                        foreach (array_dot($translations) as $key => $value) {
+                            $importedTranslation = $this->importTranslation($key, $value, $locale, $group, $replace);
+                            $counter += $importedTranslation ? 1 : 0;
+                        }
                     }
                 }
             }
@@ -135,8 +148,8 @@ class Manager{
             "\(".                               // Match opening parenthesis
             "[\'\"]".                           // Match " or '
             "(".                                // Start a new group to match:
-                "[a-zA-Z0-9_-]+".               // Must start with group
-                "([.|\/][^\1)]+)+".             // Be followed by one or more items/keys
+            "[a-zA-Z0-9_-]+".               // Must start with group
+            "([.|\/][^\1)]+)+".             // Be followed by one or more items/keys
             ")".                                // Close group
             "[\'\"]".                           // Closing quote
             "[\),]";                            // Close parentheses or new parameter
@@ -214,7 +227,7 @@ class Manager{
                             mkdir($path, 0777, true);
                         }
                         $path = $path . '/' . $group . '.php';
-                        
+
                         $output = "<?php\n\nreturn " . var_export($translations, true) . ";".\PHP_EOL;
                         $this->files->put($path, $output);
                     }
@@ -276,7 +289,7 @@ class Manager{
         return array_diff($this->locales, $this->ignoreLocales);
     }
 
-    public function addLocale($locale) 
+    public function addLocale($locale)
     {
         $localeDir = $this->app->langPath() . '/' . $locale;
 
@@ -315,7 +328,7 @@ class Manager{
         }
         return $array;
     }
-    
+
     public function jsonSet(&$array, $key, $value)
     {
         if (is_null($key)) {

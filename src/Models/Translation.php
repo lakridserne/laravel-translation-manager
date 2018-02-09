@@ -23,6 +23,8 @@ class Translation extends Model{
     protected $table = 'ltm_translations';
     protected $guarded = array('id', 'created_at', 'updated_at');
 
+    protected $fillable = ['namespace', 'locale', 'group', 'key', 'value'];
+
     public function scopeOfTranslatedGroup($query, $group)
     {
         return $query->where('group', $group)->whereNotNull('value');

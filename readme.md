@@ -1,48 +1,29 @@
 ## Laravel 5 Translation Manager
 
-### For Laravel 4, please use the [0.1 branch](https://github.com/barryvdh/laravel-translation-manager/tree/0.1)!
+This is a translation manager, that can both replace the current translation manger,
+that comes with laravel, so that it runs of a datanbase, or it can be used to export
+translation files, so they can be checked into GIT.
 
-This is a package to manage Laravel translation files.
-It does not replace the Translation system, only import/export the php files to a database and make them editable through a webinterface.
-The workflow would be:
-
-    - Import translations: Read all translation files and save them in the database
-    - Find all translations in php/twig sources
-    - Optionally: Listen to missing translation with the custom Translator
-    - Translate all keys through the webinterface
-    - Export: Write all translations back to the translation files.
-
-This way, translations can be saved in git history and no overhead is introduced in production.
-
-![Screenshot](http://i.imgur.com/4th2krf.png)
+As of now, there is no webinterface for this, but it is comming.
 
 ## Installation
 
-Require this package in your composer.json and run composer update (or run `composer require barryvdh/laravel-translation-manager` directly):
+Require this package in your composer.json and run composer update (or run `composer require addgod/laravel-translation-manager` directly):
 
-    "barryvdh/laravel-translation-manager": "0.2.x@dev"
+    "addgod/laravel-translation-manager": "^1"
 
 After updating composer, add the ServiceProvider to the providers array in config/app.php
 
-    'Barryvdh\TranslationManager\ManagerServiceProvider',
+    'Addgod\TranslationManager\ManagerServiceProvider',
 
 You need to run the migrations for this package.
 
-    $ php artisan vendor:publish --provider="Barryvdh\TranslationManager\ManagerServiceProvider" --tag=migrations
+    $ php artisan vendor:publish --provider="Addgod\TranslationManager\ManagerServiceProvider" --tag=migrations
     $ php artisan migrate
 
 You need to publish the config file for this package. This will add the file `config/translation-manager.php`, where you can configure this package.
 
-    $ php artisan vendor:publish --provider="Barryvdh\TranslationManager\ManagerServiceProvider" --tag=config
-
-In order to edit the default template, the views must be published as well. The views will then be placed in `resources/views/vendor/translation-manager`.
-
-    $ php artisan vendor:publish --provider="Barryvdh\TranslationManager\ManagerServiceProvider" --tag=views
-
-Routes are added in the ServiceProvider. You can set the group parameters for the routes in the configuration.
-You can change the prefix or filter/middleware for the routes. If you want full customisation, you can extend the ServiceProvider and override the `map()` function.
-
-This example will make the translation manager available at `http://yourdomain.com/translations`
+    $ php artisan vendor:publish --provider="Addgod\TranslationManager\ManagerServiceProvider" --tag=config
 
 ### Laravel >= 5.2
 
@@ -73,13 +54,7 @@ to
 
 ### Web interface
 
-When you have imported your translation (via buttons or command), you can view them in the webinterface (on the url you defined with the controller).
-You can click on a translation and an edit field will popup. Just click save and it is saved :)
-When a translation is not yet created in a different locale, you can also just edit it to create it.
-
-Using the buttons on the webinterface, you can import/export the translations. For publishing translations, make sure your application can write to the language directory.
-
-You can also use the commands below.
+To use this translation manager, you need to make your own webinterface. Though a webinterface will come soon.
 
 ### Import command
 
@@ -135,7 +110,7 @@ To detect missing translations, we can swap the Laravel TranslationServiceProvid
 In your config/app.php, comment out the original TranslationServiceProvider and add the one from this package:
 
     //'Illuminate\Translation\TranslationServiceProvider',
-    'Barryvdh\TranslationManager\TranslationServiceProvider',
+    'Addgod\TranslationManager\TranslationServiceProvider',
 
 This will extend the Translator and will create a new database entry, whenever a key is not found, so you have to visit the pages that use them.
 This way it shows up in the webinterface and can be edited and later exported.
@@ -143,9 +118,8 @@ You shouldn't use this in production, just in development to translate your view
 
 ## TODO
 
-This package is still very alpha. Few thinks that are on the todo-list:
+This package is still in development, but will go out of beta, when the webinterface is done.
 
-    - Add locales/groups via webinterface
-    - Improve webinterface (more selection/filtering, behavior of popup after save etc)
+    - Add a webinterface
     - Seed existing languages (https://github.com/caouecs/Laravel-lang)
     - Suggestions are welcome :)

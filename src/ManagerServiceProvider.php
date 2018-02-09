@@ -62,32 +62,8 @@ class ManagerServiceProvider extends ServiceProvider {
 	 */
 	public function boot(Router $router)
 	{
-        $viewPath = __DIR__.'/../resources/views';
-        $this->loadViewsFrom($viewPath, 'translation-manager');
-        $this->publishes([
-            $viewPath => base_path('resources/views/vendor/translation-manager'),
-        ], 'views');
-
         $migrationPath = __DIR__.'/../database/migrations';
         $this->loadMigrationsFrom($migrationPath);
-
-        $config = $this->app['config']->get('translation-manager.route', []);
-        $config['namespace'] = 'Addgod\TranslationManager';
-
-        $router->group($config, function($router)
-        {
-            $router->get('view/{groupKey?}', 'Controller@getView')->where('groupKey', '.*');
-            $router->get('/{groupKey?}', 'Controller@getIndex')->where('groupKey', '.*');
-            $router->post('/add/{groupKey}', 'Controller@postAdd')->where('groupKey', '.*');
-            $router->post('/edit/{groupKey}', 'Controller@postEdit')->where('groupKey', '.*');
-            $router->post('/groups/add', 'Controller@postAddGroup');
-            $router->post('/delete/{groupKey}/{translationKey}', 'Controller@postDelete')->where('groupKey', '.*');
-            $router->post('/import', 'Controller@postImport');
-            $router->post('/find', 'Controller@postFind');
-            $router->post('/locales/add', 'Controller@postAddLocale');
-            $router->post('/locales/remove', 'Controller@postRemoveLocale');
-            $router->post('/publish/{groupKey}', 'Controller@postPublish')->where('groupKey', '.*');
-        });
 	}
 
 	/**

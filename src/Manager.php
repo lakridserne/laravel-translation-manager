@@ -9,6 +9,7 @@ use Addgod\TranslationManager\Models\Translation;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Finder\Finder;
+use Riimu\Kit\PHPEncoder\PHPEncoder;
 
 class Manager{
 
@@ -29,6 +30,9 @@ class Manager{
 
     protected $ignoreFilePath;
 
+    /** @var PHPEncoder */
+    protected $encoder;
+
     public function __construct(Application $app, Filesystem $files, Dispatcher $events)
     {
         $this->app = $app;
@@ -38,6 +42,7 @@ class Manager{
         $this->ignoreFilePath = storage_path('.ignore_locales');
         $this->locales = [];
         $this->ignoreLocales = $this->getIgnoredLocales();
+        $this->encoder = new PHPEncoder();
     }
 
     public function missingKey($namespace, $group, $key)
@@ -258,16 +263,31 @@ class Manager{
 
                 $tree = $this->makeTree(Translation::ofTranslatedGroup($group)->orderByGroupKeys(array_get($this->config, 'sort_keys', false))->get());
 
-                foreach ($tree as $locale => $groups) {
+                foreach ($tree as $key => $groups) {
+                    list($namespace, $locale) = explode('::', $key);
+
                     if (isset($groups[$group])) {
                         $translations = $groups[$group];
-                        $path = $this->app['path.lang'] . '/' . $locale;
+
+                        if ($namespace === '*') {
+                            $path = $this->app['path.lang'] . '/' . $locale;
+                        } else {
+                            $path = $this->app['path.lang'] . '/vendor/' . $namespace . '/' . $locale;
+                        }
+
                         if(!is_dir($path)){
                             mkdir($path, 0777, true);
                         }
                         $path = $path . '/' . $group . '.php';
 
-                        $output = "<?php\n\nreturn " . var_export($translations, true) . ";".\PHP_EOL;
+                        $output = "<?php\n\nreturn " . $this->encoder->encode($translations, [
+                            'array.inline' => true,
+                            'array.omit' => true,
+                            'array.indent' => 4,
+                            'array.align' => true,
+                            'string.utf8' => true,
+                            'string.escape' => false,
+                        ]) . ";".\PHP_EOL;
                         $this->files->put($path, $output);
                     }
                 }
@@ -278,10 +298,17 @@ class Manager{
         if ($json) {
             $tree = $this->makeTree(Translation::ofTranslatedGroup(self::JSON_GROUP)->orderByGroupKeys(array_get($this->config, 'sort_keys', false))->get(), true);
 
-            foreach($tree as $locale => $groups){
-                if(isset($groups[self::JSON_GROUP])){
+            foreach($tree as $key => $groups) {
+                list($namespace, $locale) = explode('::', $key);
+                if(isset($groups[self::JSON_GROUP])) {
                     $translations = $groups[self::JSON_GROUP];
-                    $path = $this->app['path.lang'].'/'.$locale.'.json';
+
+                    if ($namespace === '*') {
+                        $path = $this->app['path.lang'] . '/' . $locale.'.json';
+                    } else {
+                        $path = $this->app['path.lang'] . '/vendor/' . $namespace . '/' . $locale.'.json';
+                    }
+
                     $output = json_encode($translations, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE);
                     $this->files->put($path, $output);
                 }
@@ -293,7 +320,7 @@ class Manager{
 
     public function exportAllTranslations()
     {
-        $groups = Translation::whereNotNull('value')->selectDistinctGroup()->get('group');
+        $groups = Translation::whereNotNull('value')->select('group', 'namespace')->selectDistinctGroup()->get();
 
         foreach($groups as $group){
             if ($group == self::JSON_GROUP) {
@@ -370,9 +397,9 @@ class Manager{
         $array = array();
         foreach($translations as $translation){
             if ($json) {
-                $this->jsonSet($array[$translation->locale][$translation->group], $translation->key, $translation->value);
+                $this->jsonSet($array[$translation->namespace . '::'. $translation->locale][$translation->group], $translation->key, $translation->value);
             } else {
-                array_set($array[$translation->locale][$translation->group], $translation->key, $translation->value);
+                array_set($array[$translation->namespace . '::'. $translation->locale][$translation->group], $translation->key, $translation->value);
             }
         }
         return $array;

@@ -2,19 +2,6 @@
 
 return array(
 
-    /*
-    |--------------------------------------------------------------------------
-    | Routes group config
-    |--------------------------------------------------------------------------
-    |
-    | The default group settings for the translation manager routes.
-    |
-    */
-    'route' => [
-        'prefix' => 'translations',
-        'middleware' => 'auth',
-    ],
-
 	/**
 	 * Exclude specific groups from Laravel Translation Manager.
 	 * This is useful if, for example, you want to avoid editing the official Laravel language files.

@@ -11,8 +11,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "5.0.x|5.1.x|5.2.x|5.3.x|5.4.x|5.5.x",
-        "illuminate/translation": "5.0.x|5.1.x|5.2.x|5.3.x|5.4.x|5.5.x",
+        "illuminate/support": "~6",
+        "illuminate/translation": "~6",
         "symfony/finder": "~2.3|~3.0",
         "riimu/kit-phpencoder": "^2.3"
     },

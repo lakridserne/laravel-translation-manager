@@ -48,16 +48,21 @@ class Translator extends LaravelTranslator {
 
         // First try to load lines from the databse, if that failes, then use
         // the standard loader.
-        $lines = Translation::whereNamespace($namespace)->whereGroup($group)->whereLocale($locale)->get(['key', 'value'])->pluck('value', 'key')->toArray();
+        try {
+            $lines = Translation::whereNamespace($namespace)->whereGroup($group)->whereLocale($locale)->get(['key', 'value'])->pluck('value', 'key')->toArray();
 
-        // The loader is responsible for returning the array of language lines for the
-        // given namespace, group, and locale. We'll set the lines in this array of
-        // lines that have already been loaded so that we can easily access them.
-        if (empty($lines)) {
-            $lines = $this->loader->load($locale, $group, $namespace);
+            // The loader is responsible for returning the array of language lines for the
+            // given namespace, group, and locale. We'll set the lines in this array of
+            // lines that have already been loaded so that we can easily access them.
+            if (empty($lines)) {
+                $lines = $this->loader->load($locale, $group, $namespace);
+            }
+
+            $this->loaded[$namespace][$group][$locale] = $lines;
+        } catch (\Exception $e) {
+            // This could happen, if the module is loaded, but the migrations are not run. So do nothing.
         }
 
-        $this->loaded[$namespace][$group][$locale] = $lines;
     }
 
     public function setTranslationManager(Manager $manager)

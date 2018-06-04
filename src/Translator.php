@@ -51,6 +51,17 @@ class Translator extends LaravelTranslator {
         try {
             $lines = Translation::whereNamespace($namespace)->whereGroup($group)->whereLocale($locale)->get(['key', 'value'])->pluck('value', 'key')->toArray();
 
+            // Make the lines into a nested array again.
+            if (!empty($lines)) {
+                $array = [];
+                foreach ($lines as $key => $value) {
+                    if ($value) {
+                        array_set($array, $key, $value);
+                    }
+                }
+                $lines = $array;
+            }
+
             // The loader is responsible for returning the array of language lines for the
             // given namespace, group, and locale. We'll set the lines in this array of
             // lines that have already been loaded so that we can easily access them.

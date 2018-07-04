@@ -14,7 +14,7 @@ class AddNamespaceToTranslations extends Migration
     public function up()
     {
         Schema::table('ltm_translations', function (Blueprint $table) {
-            $table->string('namespace')->index()->after('status');
+            $table->string('namespace')->nullable()->index()->after('status');
         });
     }
 

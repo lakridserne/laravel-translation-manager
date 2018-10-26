@@ -38,7 +38,7 @@ class Translator extends LaravelTranslator {
      * @param  string  $namespace
      * @param  string  $group
      * @param  string  $locale
-     * @return void
+     * @return array
      */
     public function load($namespace, $group, $locale)
     {
@@ -74,6 +74,7 @@ class Translator extends LaravelTranslator {
             // This could happen, if the module is loaded, but the migrations are not run. So do nothing.
         }
 
+        return $this->loaded;
     }
 
     public function setTranslationManager(Manager $manager)

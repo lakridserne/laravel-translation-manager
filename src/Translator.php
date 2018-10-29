@@ -62,12 +62,8 @@ class Translator extends LaravelTranslator {
                 $lines = $array;
             }
 
-            // The loader is responsible for returning the array of language lines for the
-            // given namespace, group, and locale. We'll set the lines in this array of
-            // lines that have already been loaded so that we can easily access them.
-            if (empty($lines)) {
-                $lines = $this->loader->load($locale, $group, $namespace);
-            }
+            // Merge the two translations storage types, one from DB one from files, where the DB entrys are preferred.
+            $lines = array_replace_recursive($this->loader->load($locale, $group, $namespace), $lines);
 
             $this->loaded[$namespace][$group][$locale] = $lines;
         } catch (\Exception $e) {

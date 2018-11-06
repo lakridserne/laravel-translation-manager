@@ -43,7 +43,7 @@ class Translator extends LaravelTranslator {
     public function load($namespace, $group, $locale)
     {
         if ($this->isLoaded($namespace, $group, $locale)) {
-            return;
+            return $this->loaded;
         }
 
         // First try to load lines from the databse, if that failes, then use

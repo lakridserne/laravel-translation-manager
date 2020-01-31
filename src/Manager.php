@@ -2,11 +2,11 @@
 
 namespace Addgod\TranslationManager;
 
-use function GuzzleHttp\Psr7\str;
+use GuzzleHttp\Psr7\str;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 use Addgod\TranslationManager\Models\Translation;
-use Illuminate\Foundation\Application;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Finder\Finder;
 use Riimu\Kit\PHPEncoder\PHPEncoder;
@@ -15,11 +15,11 @@ class Manager{
 
     const JSON_GROUP = '_json';
 
-    /** @var \Illuminate\Foundation\Application  */
+    /** @var \Illuminate\Contracts\Foundation\Application  */
     protected $app;
     /** @var \Illuminate\Filesystem\Filesystem  */
     protected $files;
-    /** @var \Illuminate\Events\Dispatcher  */
+    /** @var \Illuminate\Contracts\Events\Dispatcher  */
     protected $events;
 
     protected $config;

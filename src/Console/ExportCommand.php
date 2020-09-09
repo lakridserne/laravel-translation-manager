@@ -40,13 +40,13 @@ class ExportCommand extends Command
         $group = $this->argument('group');
         $json = $this->option('json');
 
-        if (is_null($group) && !$json) {
+        if (\is_null($group) && !$json) {
             $this->warn('You must either specify a group argument or export as --json');
 
             return;
         }
 
-        if (!is_null($group) && $json) {
+        if (!\is_null($group) && $json) {
             $this->warn('You cannot use both group argument and --json option at the same time');
 
             return;
@@ -54,7 +54,7 @@ class ExportCommand extends Command
 
         $this->manager->exportTranslations($group, $json);
 
-        if (!is_null($group)) {
+        if (!\is_null($group)) {
             $this->info('Done writing language files for '.(($group == '*') ? 'ALL groups' : $group.' group'));
         } elseif ($json) {
             $this->info('Done writing JSON language files for translation strings');

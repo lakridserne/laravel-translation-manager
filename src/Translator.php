@@ -1,12 +1,15 @@
-<?php namespace Addgod\TranslationManager;
+<?php
+
+namespace Addgod\TranslationManager;
 
 use Addgod\TranslationManager\Models\Translation;
-use Illuminate\Translation\Translator as LaravelTranslator;
 use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Arr;
+use Illuminate\Translation\Translator as LaravelTranslator;
 
-class Translator extends LaravelTranslator {
-
-    /** @var  Dispatcher */
+class Translator extends LaravelTranslator
+{
+    /** @var Dispatcher */
     protected $events;
 
     /**
@@ -17,16 +20,15 @@ class Translator extends LaravelTranslator {
      * @param  string  $locale
      * @return string
      */
-    public function get($key, array $replace = array(), $locale = null, $fallback = true)
+    public function get($key, array $replace = [], $locale = null, $fallback = true)
     {
         // Get without fallback
         $result = parent::get($key, $replace, $locale, false);
-        if($result === $key){
+        if ($result === $key) {
             $this->notifyMissingKey($key);
 
             // Reget with fallback
             $result = parent::get($key, $replace, $locale, $fallback);
-
         }
 
         return $result;
@@ -56,7 +58,7 @@ class Translator extends LaravelTranslator {
                 $array = [];
                 foreach ($lines as $key => $value) {
                     if ($value) {
-                        array_set($array, $key, $value);
+                        Arr::set($array, $key, $value);
                     }
                 }
                 $lines = $array;
@@ -81,9 +83,8 @@ class Translator extends LaravelTranslator {
     protected function notifyMissingKey($key)
     {
         list($namespace, $group, $item) = $this->parseKey($key);
-        if($this->manager && $namespace === '*' && $group && $item ){
+        if ($this->manager && $namespace === '*' && $group && $item) {
             $this->manager->missingKey($namespace, $group, $item);
         }
     }
-
 }

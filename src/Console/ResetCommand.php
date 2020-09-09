@@ -2,8 +2,8 @@
 
 namespace Addgod\TranslationManager\Console;
 
-use Illuminate\Console\Command;
 use Addgod\TranslationManager\Manager;
+use Illuminate\Console\Command;
 
 class ResetCommand extends Command
 {

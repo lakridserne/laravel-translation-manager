@@ -1,8 +1,8 @@
 <?php
 
-namespace Addgod\TranslationManager\Console;
+namespace Lakridserne\TranslationManager\Console;
 
-use Addgod\TranslationManager\Manager;
+use Lakridserne\TranslationManager\Manager;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -22,7 +22,7 @@ class ImportCommand extends Command
      */
     protected $description = 'Import translations from the PHP sources';
 
-    /** @var \Addgod\TranslationManager\Manager */
+    /** @var \Lakridserne\TranslationManager\Manager */
     protected $manager;
 
     public function __construct(Manager $manager)

@@ -1,9 +1,9 @@
 <?php
 
-namespace Addgod\TranslationManager\Tests;
+namespace Lakridserne\TranslationManager\Tests;
 
-use Addgod\TranslationManager\ManagerServiceProvider;
-use Addgod\TranslationManager\TranslationServiceProvider;
+use Lakridserne\TranslationManager\ManagerServiceProvider;
+use Lakridserne\TranslationManager\TranslationServiceProvider;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
 
 class TestCase extends TestbenchTestCase

@@ -1,9 +1,9 @@
 <?php
 
-namespace Addgod\TranslationManager\Tests\Unit;
+namespace Lakridserne\TranslationManager\Tests\Unit;
 
-use Addgod\TranslationManager\Models\Translation;
-use Addgod\TranslationManager\Tests\TestCase;
+use Lakridserne\TranslationManager\Models\Translation;
+use Lakridserne\TranslationManager\Tests\TestCase;
 
 class CommandsTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Addgod\TranslationManager;
+namespace Lakridserne\TranslationManager;
 
 use Illuminate\Translation\TranslationServiceProvider as BaseTranslationServiceProvider;
 

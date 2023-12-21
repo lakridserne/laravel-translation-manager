@@ -1,6 +1,6 @@
 <?php
 
-namespace Addgod\TranslationManager;
+namespace Lakridserne\TranslationManager;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -27,7 +27,7 @@ class ManagerServiceProvider extends ServiceProvider
         $this->publishes([$configPath => config_path('translation-manager.php')], 'config');
 
         $this->app->singleton('translation-manager', function ($app) {
-            $manager = $app->make('Addgod\TranslationManager\Manager');
+            $manager = $app->make('Lakridserne\TranslationManager\Manager');
 
             return $manager;
         });

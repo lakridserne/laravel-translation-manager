@@ -1,8 +1,8 @@
 <?php
 
-namespace Addgod\TranslationManager\Console;
+namespace Lakridserne\TranslationManager\Console;
 
-use Addgod\TranslationManager\Manager;
+use Lakridserne\TranslationManager\Manager;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,7 +23,7 @@ class ExportCommand extends Command
      */
     protected $description = 'Export translations to PHP files';
 
-    /** @var \Addgod\TranslationManager\Manager */
+    /** @var \Lakridserne\TranslationManager\Manager */
     protected $manager;
 
     public function __construct(Manager $manager)

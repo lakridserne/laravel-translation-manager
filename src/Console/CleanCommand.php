@@ -1,8 +1,8 @@
 <?php
 
-namespace Addgod\TranslationManager\Console;
+namespace Lakridserne\TranslationManager\Console;
 
-use Addgod\TranslationManager\Manager;
+use Lakridserne\TranslationManager\Manager;
 use Illuminate\Console\Command;
 
 class CleanCommand extends Command
@@ -21,7 +21,7 @@ class CleanCommand extends Command
      */
     protected $description = 'Clean empty translations';
 
-    /** @var \Addgod\TranslationManager\Manager */
+    /** @var \Lakridserne\TranslationManager\Manager */
     protected $manager;
 
     public function __construct(Manager $manager)

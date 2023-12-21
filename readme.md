@@ -8,22 +8,22 @@ As of now, there is no webinterface for this, but it is comming.
 
 ## Installation
 
-Require this package in your composer.json and run composer update (or run `composer require addgod/laravel-translation-manager` directly):
+Require this package in your composer.json and run composer update (or run `composer require lakridserne/laravel-translation-manager` directly):
 
-    "addgod/laravel-translation-manager": "^1"
+    "lakridserne/laravel-translation-manager": "^1"
 
 After updating composer, add the ServiceProvider to the providers array in config/app.php
 
-    'Addgod\TranslationManager\ManagerServiceProvider',
+    'Lakridserne\TranslationManager\ManagerServiceProvider',
 
 You need to run the migrations for this package.
 
-    $ php artisan vendor:publish --provider="Addgod\TranslationManager\ManagerServiceProvider" --tag=migrations
+    $ php artisan vendor:publish --provider="Lakridserne\TranslationManager\ManagerServiceProvider" --tag=migrations
     $ php artisan migrate
 
 You need to publish the config file for this package. This will add the file `config/translation-manager.php`, where you can configure this package.
 
-    $ php artisan vendor:publish --provider="Addgod\TranslationManager\ManagerServiceProvider" --tag=config
+    $ php artisan vendor:publish --provider="Lakridserne\TranslationManager\ManagerServiceProvider" --tag=config
 
 ### Laravel >= 5.2
 
@@ -110,7 +110,7 @@ To detect missing translations, we can swap the Laravel TranslationServiceProvid
 In your config/app.php, comment out the original TranslationServiceProvider and add the one from this package:
 
     //'Illuminate\Translation\TranslationServiceProvider',
-    'Addgod\TranslationManager\TranslationServiceProvider',
+    'Lakridserne\TranslationManager\TranslationServiceProvider',
 
 This will extend the Translator and will create a new database entry, whenever a key is not found, so you have to visit the pages that use them.
 This way it shows up in the webinterface and can be edited and later exported.

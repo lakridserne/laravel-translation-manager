@@ -1,5 +1,5 @@
 {
-    "name": "addgod/laravel-translation-manager",
+    "name": "lakridserne/laravel-translation-manager",
     "description": "Manage Laravel Translations",
     "keywords": ["laravel", "translations", "translator"],
     "license": "MIT",
@@ -25,18 +25,18 @@
     },
     "autoload": {
         "psr-4": {
-            "Addgod\\TranslationManager\\": "src/"
+            "Lakridserne\\TranslationManager\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Addgod\\TranslationManager\\Tests\\": "tests\\Unit"
+            "Lakridserne\\TranslationManager\\Tests\\": "tests\\Unit"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Addgod\\TranslationManager\\ManagerServiceProvider"
+                "Lakridserne\\TranslationManager\\ManagerServiceProvider"
             ]
         }
     },

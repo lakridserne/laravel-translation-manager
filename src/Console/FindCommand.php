@@ -1,8 +1,8 @@
 <?php
 
-namespace Addgod\TranslationManager\Console;
+namespace Lakridserne\TranslationManager\Console;
 
-use Addgod\TranslationManager\Manager;
+use Lakridserne\TranslationManager\Manager;
 use Illuminate\Console\Command;
 
 class FindCommand extends Command
@@ -21,7 +21,7 @@ class FindCommand extends Command
      */
     protected $description = 'Find translations in php/twig files';
 
-    /** @var \Addgod\TranslationManager\Manager */
+    /** @var \Lakridserne\TranslationManager\Manager */
     protected $manager;
 
     public function __construct(Manager $manager)

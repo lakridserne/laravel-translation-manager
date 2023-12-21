@@ -1,8 +1,8 @@
 <?php
 
-namespace Addgod\TranslationManager;
+namespace Lakridserne\TranslationManager;
 
-use Addgod\TranslationManager\Models\Translation;
+use Lakridserne\TranslationManager\Models\Translation;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Arr;
 use Illuminate\Translation\Translator as LaravelTranslator;

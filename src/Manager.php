@@ -1,8 +1,8 @@
 <?php
 
-namespace Addgod\TranslationManager;
+namespace Lakridserne\TranslationManager;
 
-use Addgod\TranslationManager\Models\Translation;
+use Lakridserne\TranslationManager\Models\Translation;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;

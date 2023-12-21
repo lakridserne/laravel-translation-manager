@@ -1,6 +1,6 @@
 <?php
 
-namespace Addgod\TranslationManager\Models;
+namespace Lakridserne\TranslationManager\Models;
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
